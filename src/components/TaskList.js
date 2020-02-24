@@ -7,15 +7,28 @@ class TaskList extends Component {
     tasks: []
   }
 
-  render() {
-
-    const { tasks } = this.props;
-    const list = tasks.map((task) => {
-      return (<TaskItem key={task.key} task={task}/>)
+  handleClickCreateBtn = () => {
+    const { handleCreateTask } = this.props;
+    handleCreateTask({
+      isDone: false,
+      content: ''
     });
+  }
 
+  render() {
+    const { tasks, handleUpdateTask } = this.props;
+    const list = tasks.map((task) => {
+      return (
+        <TaskItem key={task.id}
+          task={task}
+          handleUpdateTask={handleUpdateTask}
+        />
+      )
+    });
+  
     return (
       <div>
+        <button onClick={this.handleClickCreateBtn}>Add New Task</button>
         {list}
       </div>
     );
