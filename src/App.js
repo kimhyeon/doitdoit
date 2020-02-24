@@ -1,26 +1,20 @@
-import React from 'react';
-import logo from './logo.svg';
-import './App.css';
+import React, { Component } from 'react';
+import TaskList from './components/TaskList';
 
-function App() {
-  return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
-  );
+class App extends Component {
+
+  dummyTask = [
+    { key: 0, isDone: false, content: "study react"},
+    { key: 1, isDone: true, content: "cokking"}
+  ];
+
+  render() {
+    return (
+      <div>
+        <TaskList tasks={this.dummyTask}/>
+      </div>
+    );
+  }
 }
 
 export default App;
