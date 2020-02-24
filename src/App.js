@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import TaskList from './components/TaskList';
+import FilterGroup from './components/FilterGroup';
 
 class App extends Component {
 
@@ -11,6 +12,7 @@ class App extends Component {
   render() {
     return (
       <div>
+        <FilterGroup/>
         <TaskList tasks={this.dummyTask}/>
       </div>
     );

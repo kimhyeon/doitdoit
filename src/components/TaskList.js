@@ -3,7 +3,7 @@ import TaskItem from './TaskItem';
 
 class TaskList extends Component {
 
-  defaultProps = {
+  static defaultProps = {
     tasks: []
   }
 
@@ -11,7 +11,7 @@ class TaskList extends Component {
 
     const { tasks } = this.props;
     const list = tasks.map((task) => {
-      return (<TaskItem task={task}/>)
+      return (<TaskItem key={task.key} task={task}/>)
     });
 
     return (
