@@ -24,19 +24,29 @@ class App extends Component {
   handleCreateTask = (data) => {
     const { tasks } = this.state;
     this.setState({
-      tasks: [{id: this.id, ...data}].concat(tasks)
+      tasks: [{id: this.id++, ...data}].concat(tasks)
     });
   }
 
-  // RE!!!
-  handleUpdateTask = (id, data) => {
+  handleUpdateTask = (updatedData) => {
     const { tasks } = this.state;
+
+    let test = tasks.map(task => {
+      if(task.id === updatedData.id) {
+        return {
+          ...updatedData
+        }
+      }
+      return task;
+    });
+
+    console.log("test", updatedData, test);
+
     this.setState({
-      state: tasks.map(task => {
-        if(task.id === id) {
+      tasks: tasks.map(task => {
+        if(task.id === updatedData.id) {
           return {
-            id,
-            ...data
+            ...updatedData
           }
         }
         return task;
@@ -44,14 +54,34 @@ class App extends Component {
     });
   }
 
+  handleRemoveTask = (id) => {
+    const { tasks } = this.state;
+    this.setState({
+      tasks: tasks.filter(task => task.id !== id)
+    });
+  }
+
   render() {
+    const { tasks, filter } = this.state;
+
+    let filteredTask = tasks.filter((task) => {
+      if(filter === 'all' || filter === 'ALL') {
+        return task;
+      } else if(filter === 'task' || filter === 'TASK') {
+        return task.isDone === false;
+      } else {
+        return task.isDone === true;
+      }
+    });
+
     return (
       <div>
         <Header filter={this.state.filter} handleChageFilter={this.handleChageFilter}/>
         <TaskList 
-          tasks={this.state.tasks}
+          tasks={filteredTask}
           handleCreateTask={this.handleCreateTask}
           handleUpdateTask={this.handleUpdateTask}
+          handleRemoveTask={this.handleRemoveTask}
         />
       </div>
     );

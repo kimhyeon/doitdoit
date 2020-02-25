@@ -4,58 +4,104 @@ class TaskItem extends Component {
 
   state = {
     isEditing: false,
-    content: '',
+    isDone: false,
+    content: ''
   }
 
-  // handleChangeDone = () {
-  //   const {} = this.props.handleUpdateTask
-  // }
-
   handleToggleEdit = () => {
+    const { isEditing } = this.state;
+
     this.setState({
-      isEditing: !this.state.isEditing
+      isEditing: !isEditing
     });
+ 
+  }
+
+  handleChangeCheckBox = (e) => {
+    const { task, handleUpdateTask } = this.props;
+    console.dir(e.target.checked);
+
+    this.setState({
+      isDone: e.target.checked
+    });
+
+    task.isDone = e.target.checked;
+    handleUpdateTask({
+      ...task,      
+    });
+  }
+
+  handleChangeContent = (e) => {
+    this.setState({
+      content: e.target.value
+    });
+  }
+
+  handleRemoveBtn = () => {
+    const { handleRemoveTask, task } = this.props;
+    handleRemoveTask(task.id);
+  }
+
+  componentDidUpdate(prevProps, prevState) {
+    const { id, isDone, content } = this.props.task;
+
+    console.log("#", !prevState.isEditing, this.state.isEditing)
+    if(!prevState.isEditing && this.state.isEditing) {
+      this.setState({
+        isDone: isDone,
+        content: content
+      });
+    }
+
+    // blur 시 update task
+    if(prevState.isEditing && !this.state.isEditing) {
+      this.props.handleUpdateTask({
+        id: id,
+        isDone: this.state.isDone,
+        content: this.state.content
+      });
+    }
+
   }
 
   render() {
     const { isDone, content } = this.props.task;
-    const { isEditing } = this.state;
+    const { isEditing} = this.state;
+
+    console.warn(this.props.task);
 
     return (
       <div>
-        {
-          isDone === true ? (
-            <input 
-              name="done"
-              type="checkbox"
-              checked
-            />
-          ) : (
-            <input 
-              name="done" 
-              type="checkbox"
-            />
-          )
-        }
+        <input 
+          name="isDone"
+          type="checkbox"
+          onChange={this.handleChangeCheckBox}
+          checked={isDone}
+        />
 
         {
           isEditing === false ? (
-            <input 
+            <input
+              name="content"
               value={content}
               onClick={this.handleToggleEdit}
+              onChange={this.handleChangeContent}
               placeholder="Type Your Task Here"
               readOnly
             />
           ) : (
             <input 
-              value={content} 
+              name="content"
+              value={this.state.content}
+              onBlur={this.handleToggleEdit}
+              onChange={this.handleChangeContent}
               placeholder="Type Your Task Here"
             />
           )
           
         }
-        <button>
-          { isEditing === true ? '저장' : '삭제' }
+        <button onClick={this.handleRemoveBtn}>
+          삭제
         </button>
       </div>
     );

@@ -13,7 +13,6 @@ class FilterButton extends Component {
 
   render() {
     const { name, filter } = this.props;
-    console.warn(name, filter);
 
     return (
       <Fragment>

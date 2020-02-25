@@ -16,12 +16,13 @@ class TaskList extends Component {
   }
 
   render() {
-    const { tasks, handleUpdateTask } = this.props;
+    const { tasks, handleUpdateTask, handleRemoveTask } = this.props;
     const list = tasks.map((task) => {
       return (
         <TaskItem key={task.id}
           task={task}
           handleUpdateTask={handleUpdateTask}
+          handleRemoveTask={handleRemoveTask}
         />
       )
     });

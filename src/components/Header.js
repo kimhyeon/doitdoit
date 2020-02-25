@@ -5,7 +5,7 @@ class Header extends Component {
 
   render() {
     const { handleChageFilter } = this.props;
-    console.log("**", handleChageFilter)
+    
     return (
       <div>
         doitdoittask
