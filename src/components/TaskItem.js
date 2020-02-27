@@ -14,7 +14,7 @@ class TaskItem extends Component {
     this.setState({
       isEditing: !isEditing
     });
- 
+
   }
 
   handleChangeCheckBox = (e) => {
@@ -42,10 +42,19 @@ class TaskItem extends Component {
     handleRemoveTask(task.id);
   }
 
+  shouldComponentUpdate(nextProps, nextState) {
+    if(this.state.content === nextState.content
+      && this.state.isEditing === nextState.isEditing 
+      && this.props.task === nextProps.task) {
+      return false;
+    }
+    return true;
+  }
+
   componentDidUpdate(prevProps, prevState) {
     const { id, isDone, content } = this.props.task;
 
-    console.log("#", !prevState.isEditing, this.state.isEditing)
+    console.log("#componentDidUpdate", !prevState.isEditing, this.state.isEditing)
     if(!prevState.isEditing && this.state.isEditing) {
       this.setState({
         isDone: isDone,
@@ -68,7 +77,7 @@ class TaskItem extends Component {
     const { isDone, content } = this.props.task;
     const { isEditing} = this.state;
 
-    console.warn(this.props.task);
+    console.log("render", this.props.task);
 
     return (
       <div>

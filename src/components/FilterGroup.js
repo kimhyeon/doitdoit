@@ -1,15 +1,19 @@
 import React, { Component } from 'react';
 import FilterButton from './FilterButton';
 
+const filterCSS = {
+  'textAlign': 'center'
+}
+
 class FilterGroup extends Component {
   render() {
-    const { handleChageFilter } = this.props;
+    const { filter, handleChageFilter } = this.props;
     
     return(
-      <div>
-        <FilterButton name={'all'} filter={this.props.filter} handleChageFilter={handleChageFilter}/>
-        <FilterButton name={'task'} filter={this.props.filter} handleChageFilter={handleChageFilter}/>
-        <FilterButton name={'done'} filter={this.props.filter} handleChageFilter={handleChageFilter}/>
+      <div style={filterCSS}>
+        <FilterButton name={'All'} filter={filter} handleChageFilter={handleChageFilter}/>
+        <FilterButton name={'Task'} filter={filter} handleChageFilter={handleChageFilter}/>
+        <FilterButton name={'Done'} filter={filter} handleChageFilter={handleChageFilter}/>
       </div>
     );
   }

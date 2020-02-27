@@ -3,12 +3,14 @@ import TaskList from './components/TaskList';
 import FilterGroup from './components/FilterGroup';
 import Header from './components/Header';
 
+import GlobalStyles from './components/GlobalStyles';
+
 class App extends Component {
 
   id = 2;
 
   state = {
-    filter: 'all',
+    filter: 'All',
     tasks: [
       { id: 0, isDone: false, content: "study react"},
       { id: 1, isDone: true, content: "cokking"}
@@ -65,9 +67,9 @@ class App extends Component {
     const { tasks, filter } = this.state;
 
     let filteredTask = tasks.filter((task) => {
-      if(filter === 'all' || filter === 'ALL') {
+      if(filter === 'All') {
         return task;
-      } else if(filter === 'task' || filter === 'TASK') {
+      } else if(filter === 'Task') {
         return task.isDone === false;
       } else {
         return task.isDone === true;
@@ -76,6 +78,7 @@ class App extends Component {
 
     return (
       <div>
+        <GlobalStyles />
         <Header filter={this.state.filter} handleChageFilter={this.handleChageFilter}/>
         <TaskList 
           tasks={filteredTask}
