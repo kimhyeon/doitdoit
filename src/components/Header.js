@@ -5,7 +5,6 @@ import styled from 'styled-components';
 const StyledHeader = styled.div`
   position: relative;
   background-color: #FFFFFF;
-  height: 100px;
 `;
 
 const StyledTitle = styled.span`

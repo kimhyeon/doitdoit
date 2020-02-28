@@ -38,14 +38,22 @@ class FilterButton extends Component {
     }
   }
 
+  shouldComponentUpdate(nextProps, nextState) {
+    if(this.props.active === nextProps.active) {
+      return false;
+    }
+    return true;
+  }
+
   render() {
-    const { name, filter } = this.props;
+    const { name, active } = this.props;
+    console.log("filter btn render", name);
 
     return (
       <Fragment>
 
         {
-          name === filter ?
+          active ?
           (
             <StyledFilter onClick={this.handleClick} active>
             {name}

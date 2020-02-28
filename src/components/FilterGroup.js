@@ -2,7 +2,9 @@ import React, { Component } from 'react';
 import FilterButton from './FilterButton';
 
 const filterCSS = {
-  'textAlign': 'center'
+  'textAlign': 'center',
+  'marginTop': '10px',
+  'paddingBottom': '15px'
 }
 
 class FilterGroup extends Component {
@@ -11,9 +13,21 @@ class FilterGroup extends Component {
     
     return(
       <div style={filterCSS}>
-        <FilterButton name={'All'} filter={filter} handleChageFilter={handleChageFilter}/>
-        <FilterButton name={'Task'} filter={filter} handleChageFilter={handleChageFilter}/>
-        <FilterButton name={'Done'} filter={filter} handleChageFilter={handleChageFilter}/>
+        <FilterButton 
+          name={'All'}
+          active={filter === 'All' ?  true : false}
+          handleChageFilter={handleChageFilter}
+        />
+        <FilterButton
+          name={'Task'}
+          active={filter === 'Task' ?  true : false}
+          handleChageFilter={handleChageFilter}
+        />
+        <FilterButton
+          name={'Done'}
+          active={filter === 'Done' ?  true : false}
+          handleChageFilter={handleChageFilter}
+        />
       </div>
     );
   }

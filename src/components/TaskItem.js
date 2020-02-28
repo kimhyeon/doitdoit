@@ -1,4 +1,84 @@
 import React, { Component } from 'react';
+import styled from 'styled-components';
+
+const StyledTaskItem = styled.div`
+  width: calc(100% - 30px);
+  background-color: #FFFFFF;
+  display: inline-block;
+  padding: 15px;
+  margin-bottom: 15px;
+`;
+
+const StyledCheckBox = styled.div`
+  display: inline-block;
+  margin-right: 15px;
+
+  & > input {
+    display: none;
+  }
+
+  & > input + label {
+    cursor: pointer;
+    position: relative;
+  }
+
+  // Box
+  & > input + label:before {
+    content: '';
+    display: inline-block;
+    vertical-align: text-top;
+    width: 25px;
+    height: 25px;
+    border: 1px solid #878787;
+    border-radius: 5px;
+    background-color: white;
+  }
+
+  // Box focus
+  & > input:hover + label:before {
+    background-color: #d0ebff;
+  }
+  
+  // Box checked
+  & > input:checked + label:before {
+    background: #2196F3;
+    border: 1px solid #2196F3;
+  }
+
+  & > input:checked + label:after {
+    content: '';
+    position: absolute;
+    left: 7px;
+    top: 12px;
+    background: white;
+    width: 3px;
+    height: 3px;
+    box-shadow: 
+    3px 0 0 white,
+    5px 0 0 white,
+    5px -3px 0 white,
+    5px -5px 0 white,
+    5px -7px 0 white,
+    5px -9px 0 white;
+    transform: rotate(45deg);
+  }
+
+  // Disabled state label.
+  & > input:disabled + label {
+    color: #b8b8b8;
+    cursor: auto;
+  }
+
+  // Disabled box.
+  & > input:disabled + label:before {
+    box-shadow: none;
+    background: #ddd;
+  }
+`;
+
+const StyledTextarea = styled.textarea`
+  resize:none;
+`;
 
 class TaskItem extends Component {
 
@@ -70,27 +150,29 @@ class TaskItem extends Component {
         content: this.state.content
       });
     }
-
   }
 
   render() {
-    const { isDone, content } = this.props.task;
+    const { id, isDone, content } = this.props.task;
     const { isEditing} = this.state;
 
     console.log("render", this.props.task);
 
     return (
-      <div>
-        <input 
-          name="isDone"
-          type="checkbox"
-          onChange={this.handleChangeCheckBox}
-          checked={isDone}
-        />
-
+      <StyledTaskItem>
+        <StyledCheckBox>
+          <input
+            id={`${id}_ID`}
+            name="isDone"
+            type="checkbox"
+            onChange={this.handleChangeCheckBox}
+            checked={isDone}
+          />
+          <label htmlFor={`${id}_ID`}></label>
+        </StyledCheckBox>
         {
           isEditing === false ? (
-            <input
+            <StyledTextarea
               name="content"
               value={content}
               onClick={this.handleToggleEdit}
@@ -99,7 +181,7 @@ class TaskItem extends Component {
               readOnly
             />
           ) : (
-            <input 
+            <StyledTextarea 
               name="content"
               value={this.state.content}
               onBlur={this.handleToggleEdit}
@@ -107,12 +189,13 @@ class TaskItem extends Component {
               placeholder="Type Your Task Here"
             />
           )
-          
         }
+
+
         <button onClick={this.handleRemoveBtn}>
           삭제
         </button>
-      </div>
+      </StyledTaskItem>
     );
   }
 }

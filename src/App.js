@@ -63,6 +63,13 @@ class App extends Component {
     });
   }
 
+  handleRemoveDones = () => {
+    const { tasks } = this.state;
+    this.setState({
+      tasks: tasks.filter(task => task.isDone === false)
+    });
+  }
+
   render() {
     const { tasks, filter } = this.state;
 
@@ -79,12 +86,16 @@ class App extends Component {
     return (
       <div>
         <GlobalStyles />
-        <Header filter={this.state.filter} handleChageFilter={this.handleChageFilter}/>
+        <Header
+          filter={this.state.filter}
+          handleChageFilter={this.handleChageFilter}
+        />
         <TaskList 
           tasks={filteredTask}
           handleCreateTask={this.handleCreateTask}
           handleUpdateTask={this.handleUpdateTask}
           handleRemoveTask={this.handleRemoveTask}
+          handleRemoveDones={this.handleRemoveDones}
         />
       </div>
     );
