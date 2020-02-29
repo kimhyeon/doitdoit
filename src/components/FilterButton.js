@@ -8,6 +8,9 @@ const StyledFilter = styled.span`
   display: inline-block;
   &:hover {
     cursor: pointer;
+    background-color: #E2EEF5;
+    border-radius: 7px;
+    color: #3A8BBB;
   }
 
   &:first-child {
@@ -20,7 +23,6 @@ const StyledFilter = styled.span`
         background-color: #E2EEF5;
         border-radius: 7px;
         color: #3A8BBB;
-        font-family: 'Roboto-bold';
       `;
     }
   }}

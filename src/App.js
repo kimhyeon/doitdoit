@@ -7,14 +7,16 @@ import GlobalStyles from './components/GlobalStyles';
 
 class App extends Component {
 
-  id = 2;
-
   state = {
     filter: 'All',
     tasks: [
-      { id: 0, isDone: false, content: "study react"},
-      { id: 1, isDone: true, content: "cokking"}
+      // { id: "uid_1583003467204", isDone: false, content: "study react"},
+      // { id: "uid_1583003467037", isDone: true, content: "cokking"}
     ]
+  }
+
+  getUID = () => {
+    return `uid_${Date.now()}`;
   }
 
   handleChageFilter = (data) => {
@@ -23,14 +25,16 @@ class App extends Component {
     });
   }
 
-  handleCreateTask = (data) => {
+  handleCreateTask = async (data) => {
     const { tasks } = this.state;
-    this.setState({
-      tasks: [{id: this.id++, ...data}].concat(tasks)
+    await this.setState({
+      tasks: [{id: this.getUID(), ...data}].concat(tasks)
     });
+    localStorage.setItem('tasks', JSON.stringify(this.state.tasks));
+
   }
 
-  handleUpdateTask = (updatedData) => {
+  handleUpdateTask = async (updatedData) => {
     const { tasks } = this.state;
 
     let test = tasks.map(task => {
@@ -44,7 +48,7 @@ class App extends Component {
 
     console.log("test", updatedData, test);
 
-    this.setState({
+    await this.setState({
       tasks: tasks.map(task => {
         if(task.id === updatedData.id) {
           return {
@@ -54,20 +58,35 @@ class App extends Component {
         return task;
       })
     });
+    localStorage.setItem('tasks', JSON.stringify(this.state.tasks));
+
   }
 
-  handleRemoveTask = (id) => {
+  handleRemoveTask = async (id) => {
     const { tasks } = this.state;
-    this.setState({
+    await this.setState({
       tasks: tasks.filter(task => task.id !== id)
     });
+    localStorage.setItem('tasks', JSON.stringify(this.state.tasks));
   }
 
-  handleRemoveDones = () => {
+  handleRemoveDones = async () => {
     const { tasks } = this.state;
-    this.setState({
+    await this.setState({
       tasks: tasks.filter(task => task.isDone === false)
     });
+    localStorage.setItem('tasks', JSON.stringify(this.state.tasks));
+  }
+
+  componentDidMount = () => {
+    const tasks = localStorage.getItem('tasks');
+    if(tasks) {
+      this.setState({
+        tasks: JSON.parse(tasks)
+      })
+    } else {
+      console.log('No tasks');
+    }
   }
 
   render() {

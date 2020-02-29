@@ -1,10 +1,11 @@
 import React, { Component } from 'react';
-import styled from 'styled-components';
+import styled, { css } from 'styled-components';
 
 const StyledTaskItem = styled.div`
   width: calc(100% - 30px);
   background-color: #FFFFFF;
-  display: inline-block;
+  display: flex;
+  position: relative;
   padding: 15px;
   margin-bottom: 15px;
 `;
@@ -12,6 +13,7 @@ const StyledTaskItem = styled.div`
 const StyledCheckBox = styled.div`
   display: inline-block;
   margin-right: 15px;
+  margin-top: 6px;
 
   & > input {
     display: none;
@@ -27,8 +29,8 @@ const StyledCheckBox = styled.div`
     content: '';
     display: inline-block;
     vertical-align: text-top;
-    width: 25px;
-    height: 25px;
+    width: 28px;
+    height: 28px;
     border: 1px solid #878787;
     border-radius: 5px;
     background-color: white;
@@ -36,7 +38,7 @@ const StyledCheckBox = styled.div`
 
   // Box focus
   & > input:hover + label:before {
-    background-color: #d0ebff;
+    // background-color: #d0ebff;
   }
   
   // Box checked
@@ -48,18 +50,18 @@ const StyledCheckBox = styled.div`
   & > input:checked + label:after {
     content: '';
     position: absolute;
-    left: 7px;
-    top: 12px;
+    left: 8px;
+    top: 13px;
     background: white;
-    width: 3px;
-    height: 3px;
+    width: 4px;
+    height: 4px;
     box-shadow: 
     3px 0 0 white,
     5px 0 0 white,
     5px -3px 0 white,
     5px -5px 0 white,
     5px -7px 0 white,
-    5px -9px 0 white;
+    5px -10px 0 white;
     transform: rotate(45deg);
   }
 
@@ -77,15 +79,79 @@ const StyledCheckBox = styled.div`
 `;
 
 const StyledTextarea = styled.textarea`
-  resize:none;
+  resize: none;
+  font-family: Roboto-regular;
+  font-size: 20px;
+  line-height: 24px;
+  height: auto;
+  width: calc(100% - 78px);
+  overflow: auto;
+  box-sizing: border-box;
+  padding: 8px;
+  border: 1px solid #FFFFFF;
+  border-radius: 5px;
+  outline: none;
+
+  &:focus {
+    border-color: #5994FD;
+  }
+
+  ${props => {
+    if(props.isDone) {
+      return css`
+        text-decoration: line-through;
+        color: #2196F3;
+      `
+    }
+  }}
+
 `;
+
+const StyledRemoveBtn = styled.div`
+  position: absolute;
+  right: 15px;
+  width: 28px;
+  height: 28px;
+  margin-top: 7px;
+  opacity: 0.3;
+
+  &:hover {
+    opacity: 1;
+    cursor: pointer;
+  }
+
+  &:before, &:after {
+    position: absolute;
+    left: 13px;
+    content: '';
+    height: 29px;
+    width: 2px;
+    background-color: #333;
+  }
+
+  &:before {
+    transform: rotate(45deg);
+  }
+  &:after {
+    transform: rotate(-45deg);
+  }
+`;
+
 
 class TaskItem extends Component {
 
+  editInput = React.createRef();
+
+  textarea = {
+    minRows: 1,
+    maxRows: 10
+  }
+
   state = {
-    isEditing: false,
+    isEditing: this.props.isNew,
     isDone: false,
-    content: ''
+    content: '',
+    rows: 1
   }
 
   handleToggleEdit = () => {
@@ -94,7 +160,13 @@ class TaskItem extends Component {
     this.setState({
       isEditing: !isEditing
     });
-
+  }
+  
+  handleKeyDown = (e) => {
+    console.dir(e.key);
+    if(e.key === "Escape") {
+      e.target.blur();
+    }
   }
 
   handleChangeCheckBox = (e) => {
@@ -112,9 +184,34 @@ class TaskItem extends Component {
   }
 
   handleChangeContent = (e) => {
+    
+    const { minRows, maxRows } = this.textarea;
+    const { rows } = this.state;
+    const textareaLineHeight = 24;
+    const textareaPaddingTotalHeight = 16;
+    
+    const previousRows = e.target.rows;
+    e.target.rows = minRows; // 1줄로 만들어서 스크롤 높이 구해오기
+    
+    const currentRows = ((e.target.scrollHeight - textareaPaddingTotalHeight) / textareaLineHeight);
+    console.warn(`${previousRows}-${e.target.scrollHeight}`, `${currentRows}-${e.target.scrollHeight - textareaPaddingTotalHeight}`);
+    
+    if (currentRows === previousRows) {
+      e.target.rows = currentRows;   
+    }
+    
+		if (currentRows >= maxRows) {
+			e.target.rows = maxRows;
+			e.target.scrollTop = e.target.scrollHeight;
+    }
+    
+    console.warn(e.target.rows, ~~(e.target.scrollHeight / textareaLineHeight));
+
     this.setState({
+      rows: currentRows > maxRows ? maxRows : currentRows,
       content: e.target.value
     });
+
   }
 
   handleRemoveBtn = () => {
@@ -152,11 +249,18 @@ class TaskItem extends Component {
     }
   }
 
-  render() {
-    const { id, isDone, content } = this.props.task;
-    const { isEditing} = this.state;
+  componentDidMount() {
+    const { isNew } = this.props;
+    if(isNew) {
+      this.editInput.current.focus();
+      console.warn("is new");
+    }
+  }
 
-    console.log("render", this.props.task);
+  render() {
+    const { isNew } = this.props;
+    const { id, isDone, content } = this.props.task;
+    const { isEditing, rows } = this.state;
 
     return (
       <StyledTaskItem>
@@ -171,30 +275,31 @@ class TaskItem extends Component {
           <label htmlFor={`${id}_ID`}></label>
         </StyledCheckBox>
         {
-          isEditing === false ? (
+          (isEditing === false && isNew === false) ? (
             <StyledTextarea
               name="content"
+              placeholder="Type Your Task Here"
               value={content}
               onClick={this.handleToggleEdit}
               onChange={this.handleChangeContent}
-              placeholder="Type Your Task Here"
+              rows={rows}
+              isDone={isDone}
               readOnly
             />
           ) : (
             <StyledTextarea 
               name="content"
+              placeholder="Type Your Task Here"
               value={this.state.content}
               onBlur={this.handleToggleEdit}
               onChange={this.handleChangeContent}
-              placeholder="Type Your Task Here"
+              onKeyDown={this.handleKeyDown}
+              ref={this.editInput}
+              rows={rows}
             />
           )
         }
-
-
-        <button onClick={this.handleRemoveBtn}>
-          삭제
-        </button>
+        <StyledRemoveBtn onClick={this.handleRemoveBtn}></StyledRemoveBtn>
       </StyledTaskItem>
     );
   }
