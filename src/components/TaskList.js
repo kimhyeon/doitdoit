@@ -112,9 +112,7 @@ class TaskList extends Component {
   }
 
   render() {
-
-    console.log("render");
-
+    const gh_notask_icon_URL = "https://raw.githubusercontent.com/kimhyeon/doitdoittask/master/public/images/chunbae.png";
     const { tasks, handleUpdateTask, handleRemoveTask } = this.props;
     const list = tasks.map((task, index) => {
       if(index === 0 && task.content === '') {
@@ -133,7 +131,7 @@ class TaskList extends Component {
       )
     });
   
-    
+
 
     return (
       <div>
@@ -150,7 +148,8 @@ class TaskList extends Component {
             <StyledNoTaskMessage>
               <StyledIconLink>
                 <a href="https://comic.naver.com/webtoon/list.nhn?titleId=708452" target="_blank">
-                  <img className="icon" src="/images/chunbae.png"></img>
+                  {/* <img className="icon" src="/images/chunbae.png"></img> */}
+                  <img className="icon" src={gh_notask_icon_URL}></img>
                   <div>
                     <span>©️ NAVER WEBTOON CORP. of '냐한남자'</span>
                   </div>

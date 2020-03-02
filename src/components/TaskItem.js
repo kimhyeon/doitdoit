@@ -280,7 +280,7 @@ class TaskItem extends Component {
               name="content"
               placeholder="Type Your Task Here"
               value={content}
-              onClick={this.handleToggleEdit}
+              onFocus={this.handleToggleEdit}
               onChange={this.handleChangeContent}
               rows={rows}
               isDone={isDone}
